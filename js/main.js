@@ -27,7 +27,6 @@ function initGame() {
     for (var i = 0; i < gLevel.MINES; i++) {
         addRandomMine()
     }
-    // console.log(showMines())
     console.log(gBoard);
 
 }
@@ -105,7 +104,6 @@ function addRandomMine() {
     // Model
     gBoard[randPosI][randPosJ] = MINE
     // DOM 
-
     renderBoard(gBoard, '.board-container')
 }
 
@@ -123,16 +121,21 @@ function getNoMineCell() {
 }
 
 function cellClicked(elCell, i, j) {
+    if (isFirstClick) {
+        // for (var i = 0; i < gLevel.MINES; i++) { // for first click no MINE
+        //     addRandomMine()
+        // }
+        stoper()
+        console.log(gBoard);
+    }
+    isFirstClick = false
     if (elCell.classList.contains('marked')) return
     cell = oncontextmenu
     if (!gGame.isOn) return
 
     var cell = gBoard[i][j]
-    if (isFirstClick) {
-        stoper()
-    }
-    isFirstClick = false
     if (cell === MINE) {
+        elCell.style.backgroundColor = '#eb4d4d'
         renderCell({ i, j }, MINE)
         var showMinesArr = showMines()
         for (var k = 0; k < showMinesArr.length; k++) {
@@ -149,20 +152,41 @@ function cellClicked(elCell, i, j) {
         //     }
         // }
         gCell.isShown = true
-        // console.log(showMinesArr[1])
         clearInterval(int)
         gCell.isMine = true
-        // elCell.classList.add('mine')
-        // console.log(elCell.classList.contains('mine'))
         gGame.isOn = false
         elRestart.innerText = '😥'
         return
     }
-
     cell.isShown = true
     if (cell.isShown) cell.minesAroundCount = setMinesNegsCount({ i, j })
-    renderCell({ i, j }, cell.minesAroundCount)
-    console.log('cell', cell);
+    if (cell.minesAroundCount === 0) {
+        foo()
+        function foo() {
+
+            var open = openNeighbors(i, j, gBoard)
+            var show = showNeighbors(i, j, gBoard)
+            for (var k = 0; k < open.length; k++) {
+                show[k].isShown = true
+                gBoard[open[k].i][open[k].j].isShown = true
+                show[k] = setMinesNegsCount(open[k])
+                console.log(open);
+                console.log(show);
+
+                renderCell({ i: open[k].i, j: open[k].j }, show[k])
+
+                // if (setMinesNegsCount(open[k]) === 0) foo()
+            }
+        }
+    }
+    if (cell.minesAroundCount === 0) {
+        renderCell({ i, j }, cell.minesAroundCount)
+        elCell.style.backgroundColor = '#645d5d'
+        elCell.style.color = '#645d5d'
+    } else {
+        renderCell({ i, j }, cell.minesAroundCount)
+    }
+    // console.log('cell', cell);
     gElSelectedCell = (gElSelectedCell !== elCell) ? elCell : ''
     if (!gElSelectedCell) return
     if (gElSelectedCell) {
@@ -196,6 +220,40 @@ function countNeighbors(cellI, cellJ, mat) {
     }
     // console.log('gCell', gCell.minesAroundCount);
     return neighborsCount;
+}
+
+function openNeighbors(cellI, cellJ, mat) {
+    var neighbors = []
+    gCell.minesAroundCount = 0
+    for (var i = cellI - 1; i <= cellI + 1; i++) {
+        if (i < 0 || i >= mat.length) continue;
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            if (i === cellI && j === cellJ) continue;
+            if (j < 0 || j >= mat[i].length) continue;
+            if (mat[i][j] !== MINE) {
+                neighbors.push({ i, j })
+            } else neighbors = []
+        }
+    }
+    // console.log('gCell', gCell.minesAroundCount);
+    return neighbors;
+}
+
+function showNeighbors(cellI, cellJ, mat) {
+    var neighbors = []
+    gCell.minesAroundCount = 0
+    for (var i = cellI - 1; i <= cellI + 1; i++) {
+        if (i < 0 || i >= mat.length) continue;
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            if (i === cellI && j === cellJ) continue;
+            if (j < 0 || j >= mat[i].length) continue;
+            if (mat[i][j] !== MINE) {
+                neighbors.push(mat[i][j])
+            } else neighbors = []
+        }
+    }
+    // console.log('gCell', gCell.minesAroundCount);
+    return neighbors;
 }
 
 function setMinesNegsCount(pos) {

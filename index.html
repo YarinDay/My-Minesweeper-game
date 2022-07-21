@@ -10,13 +10,13 @@
 </head>
 
 <body onload="initGame()">
-    <h2 >Timer: <span class="timer-display">00 : 000</span></h2>
     <button class="restart" onclick="restartGame()">😃</button>
     <div class="select-level">
         <button id="2" class="4" onclick="selectLevel(this, this.id)">Beginner(4x4)</button>
         <button id="12" class="8" onclick="selectLevel(this, this.id)">Medium(8x8)</button>
         <button id="30" class="12" onclick="selectLevel(this, this.id)">Expert(12x12)</button>
     </div>
+    <h2 class="h2">Timer: <span class="timer-display">00 : 000</span></h2>
     <div class="board-container"></div>
 
 
