@@ -1,0 +1,45 @@
+body {
+    background-color: rgb(53, 52, 52);
+    text-align: center;
+}
+
+div {
+    margin-left: 981px;
+    border-color: blue;
+    border-width: 20px;
+
+}
+.board-container {
+    margin-top: 50px;
+}
+
+.cell {
+    width: 80px;
+    height: 80px;
+    
+    font-size: 30px;
+    border-radius: 5px;
+    border: 1px solid rgb(49, 154, 165);
+    background-color: rgb(142, 137, 137);
+}
+.cell:hover {
+    opacity: 80%;
+}
+
+button {
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px;
+    font-size: 20px;
+    background-color: rgba(0, 255, 255, 0.406);
+    border: 1px solid rgb(16, 34, 240);
+}
+.select-level {
+    margin-left: 15px;
+}
+
+.select-level button {
+    background-color: green;
+    border: 1px solid limegreen;
+
+}
